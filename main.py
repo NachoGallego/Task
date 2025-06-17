@@ -29,7 +29,7 @@ def get_car_by_booking_date(bookingDate: str = Query(...)):
         
         for date_str in car["bookingDates"]:
             try:
-                print(f"Fecha recibida: {bookingDate}")
+                print(f"Input Date: {bookingDate}")
                 date = datetime.strptime(date_str, "%Y-%m-%d").date()
                 if date == input_date:
                     filtered_cars.append(car)
