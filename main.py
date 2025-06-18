@@ -5,7 +5,7 @@ api = FastAPI()
 
 cars = [
     {"id": 1, "bookingDates":["2025-06-01", "2025-06-05", "2025-06-10" ]},
-    {"id": 2, "bookingDates":[ ]},
+    {"id": 2, "bookingDates":[]},
     {"id": 3, "bookingDates":["2025-06-02", "2025-06-06 "]},
     {"id": 4, "bookingDates":["2025-06-03", "2025-06-07", "2025-06-15" ]}]
 
@@ -39,18 +39,17 @@ def get_car_by_booking_date(bookingDate: str = Query(...)):
     return filtered_cars
 
 @api.post("/carBooking/{bookingDate}")
-def update_car_booking(bookingDate: str, car_id: int):
+def update_car_booking(bookingDate: str):
     try:
         input_date = datetime.strptime(bookingDate, "%Y-%m-%d").date()
     except ValueError:
-        return {"error": "Invalid date. Use format YYYY-MM-DD.."}
+        return {"error": "Invalid date. Use format YYYY-MM-DD."}
 
     for car in cars:
-        if car["id"] == car_id:
-            if bookingDate not in car["bookingDates"]:
-                car["bookingDates"].append(bookingDate)
-                return {"message": "Booking saved."}
-            else:
-                return {"message": "Date not available for this car."}
+        if bookingDate not in car["bookingDates"]:
+            car["bookingDates"].append(bookingDate)
+            return {"message": f"Booking saved for car {car['id']}."}
+        
+    return {"message": "No cars available for that date."}
     
-    return {"error": "Carn not found."}
+   
