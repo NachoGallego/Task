@@ -1,13 +1,15 @@
 from fastapi import FastAPI,Query
 from datetime import datetime
+import json
+
+
+with open("cars.json", "r") as file:
+    cars = json.load(file)
 
 api = FastAPI()
 
-cars = [
-    {"id": 1, "bookingDates":["2025-06-01", "2025-06-05", "2025-06-10" ]},
-    {"id": 2, "bookingDates":[]},
-    {"id": 3, "bookingDates":["2025-06-02", "2025-06-06 "]},
-    {"id": 4, "bookingDates":["2025-06-03", "2025-06-07", "2025-06-15" ]}]
+
+
 
 @api.get("/")
 def index():
