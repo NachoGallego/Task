@@ -10,35 +10,33 @@ api = FastAPI()
 
 
 
-
-@api.get("/")
-def index():
-    return {"message": "Hello, World!"}
-
 @api.get("/allCars")
 def get_cars():
     return cars
 
 @api.get("/car")
-def get_car_by_booking_date(bookingDate: str = Query(...)):
-    try:
-        input_date = datetime.strptime(bookingDate, "%Y-%m-%d").date()
-    except ValueError:
-        return {"error": "Invalid date. Use format YYYY-MM-DD."}
 
+
+def get_available_cars(date):
+    input_date = datetime.strptime(date, "%Y-%m-%d").date()
     filtered_cars = []
+
     for car in cars:
-        
+        is_reserved = False
+
         for date_str in car["bookingDates"]:
-            try:
-                print(f"Input Date: {bookingDate}")
+            
                 date = datetime.strptime(date_str, "%Y-%m-%d").date()
                 if date == input_date:
-                    filtered_cars.append(car)
-                    break
-            except ValueError:
-                continue
+                    is_reserved = True
+                    break  
+             
+
+        if not is_reserved:
+            filtered_cars.append(car)
+
     return filtered_cars
+
 
 @api.post("/carBooking/{bookingDate}")
 def update_car_booking(bookingDate: str):
