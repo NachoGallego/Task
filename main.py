@@ -33,7 +33,7 @@ def get_available_cars(date):
              
 
         if not is_reserved:
-            filtered_cars.append(car)
+            filtered_cars.append(car["id"])
 
     return filtered_cars
 
