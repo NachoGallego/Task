@@ -17,7 +17,7 @@ def test_get_available_cars_with_booked_date():
     assert response.status_code == 200
     available_cars = response.json()
     assert isinstance(available_cars, list)
-    assert "1" not in available_cars   # For the input date, Car 1 should not be available
+    assert 1 not in available_cars   # For the input date, Car 1 should not be available
 
 
 def test_get_available_cars_with_free_date():
@@ -25,7 +25,7 @@ def test_get_available_cars_with_free_date():
     assert response.status_code == 200
     available_cars = response.json()
     assert isinstance(available_cars, list)
-    assert "1" in available_cars or "car2" in available_cars # For the input date, ccar 1 or 2 should be available
+    assert 1 in available_cars and 2 in available_cars # For the input date, car 1 or 2 should be available
 
 
 def test_get_available_cars_with_invalid_date():
