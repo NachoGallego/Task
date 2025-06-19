@@ -1,6 +1,7 @@
-from fastapi import FastAPI,Query
+from fastapi import FastAPI,HTTPException
 from datetime import datetime
 import json
+
 
 
 with open("cars.json", "r") as file:
@@ -10,15 +11,19 @@ api = FastAPI()
 
 
 
-@api.get("/allCars")
+@api.get("/allCars") #Returns a list of all cars and their booking dates
 def get_cars():
     return cars
 
-@api.get("/car")
-
-
+@api.get("/car") #Returns a list of available cars for a given date
 def get_available_cars(date):
-    input_date = datetime.strptime(date, "%Y-%m-%d").date()
+    try:
+        input_date = datetime.strptime(date, "%Y-%m-%d").date()
+    except ValueError:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid date. Use format YYYY-MM-DD."
+        )
     filtered_cars = []
 
     for car in cars:
@@ -38,12 +43,15 @@ def get_available_cars(date):
     return filtered_cars
 
 
-@api.post("/carBooking/{bookingDate}")
+@api.post("/carBooking/{bookingDate}") #Books the first available car for a given date
 def update_car_booking(bookingDate: str):
     try:
         input_date = datetime.strptime(bookingDate, "%Y-%m-%d").date()
     except ValueError:
-        return {"error": "Invalid date. Use format YYYY-MM-DD."}
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid date. Use format YYYY-MM-DD."
+        )
 
     for car in cars:
         if bookingDate not in car["bookingDates"]:
